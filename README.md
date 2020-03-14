@@ -14,7 +14,7 @@ and then (attention to replace your openssl version)
 g++ *.cpp common/*.cpp -lcrypto -I/usr/local/Cellar/openssl/1.0.2s/include -L/usr/local/Cellar/openssl/1.0.2s/lib -O3 -o zsign
 ```
 
-#### CentOS:
+#### CentOS7:
 ```bash
 yum install openssl-devel
 ```
@@ -87,6 +87,24 @@ options:
 8. Inject dylib(LC_LOAD_WEAK_DYLIB) into mach-o file.
 ```bash
 ./zsign -w -l "@executable_path/demo.dylib" demo.app/execute
+```
+
+### Docker
+1. Build:
+```
+docker build -t zsign https://github.com/zhlynn/zsign.git
+```
+
+2. Run:
+
+*Mount current directory (stored in $PWD) to container and set WORKDIR to it:*
+```
+docker run -v "$PWD:$PWD" -w "$PWD" zsign -k privkey.pem -m dev.prov -o output.ipa -z 9 demo.ipa
+```
+
+*If input files are outside current folder, you will need to mount different folder:*
+```
+docker run -v "/source/input:/target/input" -w "/target/input" zsign -k privkey.pem -m dev.prov -o output.ipa -z 9 demo.ipa
 ```
 
 ### Copyright
